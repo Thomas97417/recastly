@@ -1,3 +1,5 @@
+import { usePostHog } from "posthog-js/react";
+
 import { authClient } from "@/lib/auth-client";
 import { Button } from "./ui/button";
 
@@ -21,11 +23,16 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 export function GitHubLoginButton() {
+  const posthog = usePostHog();
+
   return (
     <Button
       type="button"
       variant="outline"
-      onClick={() => authClient.signIn.social({ provider: "github" })}
+      onClick={() => {
+        posthog.capture("social_sign_in_started", { provider: "github" });
+        authClient.signIn.social({ provider: "github" });
+      }}
     >
       <GitHubIcon className="mr-2 h-4 w-4" />
       GitHub
@@ -34,11 +41,16 @@ export function GitHubLoginButton() {
 }
 
 export function GoogleLoginButton() {
+  const posthog = usePostHog();
+
   return (
     <Button
       type="button"
       variant="outline"
-      onClick={() => authClient.signIn.social({ provider: "google" })}
+      onClick={() => {
+        posthog.capture("social_sign_in_started", { provider: "google" });
+        authClient.signIn.social({ provider: "google" });
+      }}
     >
       <GoogleIcon className="mr-2 h-4 w-4" />
       Google

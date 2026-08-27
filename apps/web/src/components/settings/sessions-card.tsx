@@ -1,6 +1,7 @@
 import { authClient } from "@/lib/auth-client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import { Button } from "../ui/button";
 import { Loader2, Monitor, Smartphone, Globe, X, LogOut } from "lucide-react";
 import { useState } from "react";
@@ -26,6 +27,7 @@ import {
 } from "../ui/alert-dialog";
 
 export default function SessionsCard() {
+  const posthog = usePostHog();
   const queryClient = useQueryClient();
   const [revokingId, setRevokingId] = useState<string | null>(null);
   const [revokingAll, setRevokingAll] = useState(false);
@@ -57,9 +59,12 @@ export default function SessionsCard() {
       {
         onSuccess: () => {
           if (isCurrent) {
+            posthog.capture("session_revoked", { is_current_session: true });
+            posthog.reset();
             router.navigate({ to: "/" });
             return;
           }
+          posthog.capture("session_revoked", { is_current_session: false });
           toast.success("Session revoked.");
           queryClient.invalidateQueries({ queryKey: ["sessions"] });
         },
@@ -77,6 +82,7 @@ export default function SessionsCard() {
     if (error) {
       toast.error(error.message);
     } else {
+      posthog.capture("other_sessions_revoked");
       toast.success("All other sessions revoked.");
       queryClient.invalidateQueries({ queryKey: ["sessions"] });
     }

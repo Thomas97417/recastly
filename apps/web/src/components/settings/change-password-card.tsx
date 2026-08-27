@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
@@ -17,6 +18,7 @@ import {
 import PasswordInput from "../ui/password-input";
 
 export default function ChangePasswordCard() {
+  const posthog = usePostHog();
   const form = useForm({
     defaultValues: {
       currentPassword: "",
@@ -32,6 +34,7 @@ export default function ChangePasswordCard() {
       if (error) {
         toast.error(error.message);
       } else {
+        posthog.capture("password_changed");
         toast.success("Password changed successfully.");
         form.reset();
       }

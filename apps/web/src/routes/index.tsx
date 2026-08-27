@@ -103,7 +103,7 @@ function HomeComponent() {
       {/* Hero */}
       <section className="relative flex w-full flex-col items-center gap-8 px-4 pt-16 pb-20">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="bg-primary/5 absolute top-1/2 left-1/2 size-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]" />
+          <div className="bg-primary/5 absolute top-1/2 left-1/2 size-150 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]" />
         </div>
 
         <div className="relative flex flex-col items-center gap-6">

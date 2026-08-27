@@ -2,6 +2,7 @@ import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Mail, MailCheck } from "lucide-react";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
@@ -12,6 +13,7 @@ import { Label } from "./ui/label";
 import { useState } from "react";
 
 export default function VerifyEmailForm() {
+  const posthog = usePostHog();
   const [sent, setSent] = useState(false);
 
   const form = useForm({
@@ -24,6 +26,7 @@ export default function VerifyEmailForm() {
           email: value.email,
           callbackURL: "/sign-in",
         });
+        posthog.capture("email_verification_requested");
         setSent(true);
       } catch {
         toast.error("Something went wrong. Please try again.");

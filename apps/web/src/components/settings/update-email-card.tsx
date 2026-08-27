@@ -10,12 +10,14 @@ import { Label } from "../ui/label";
 import { useForm } from "@tanstack/react-form";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import z from "zod";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 export default function UpdateEmailCard({ email }: { email: string }) {
+  const posthog = usePostHog();
   const { data: accounts } = useQuery({
     queryKey: ["accounts"],
     queryFn: async () => {
@@ -35,6 +37,7 @@ export default function UpdateEmailCard({ email }: { email: string }) {
         { newEmail: value.newEmail },
         {
           onSuccess: () => {
+            posthog.capture("user_email_updated");
             toast.success("Email updated successfully.");
           },
           onError: (error) => {

@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
@@ -17,6 +18,7 @@ import { Label } from "../ui/label";
 import { Loader2 } from "lucide-react";
 
 export default function UpdateNameCard({ name }: { name: string }) {
+  const posthog = usePostHog();
   const form = useForm({
     defaultValues: { name },
     onSubmit: async ({ value }) => {
@@ -24,6 +26,7 @@ export default function UpdateNameCard({ name }: { name: string }) {
         { name: value.name },
         {
           onSuccess: () => {
+            posthog.capture("user_name_updated");
             toast.success("Name updated successfully.");
           },
           onError: (error) => {

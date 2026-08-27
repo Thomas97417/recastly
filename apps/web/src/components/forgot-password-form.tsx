@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
@@ -11,6 +12,7 @@ import { Label } from "./ui/label";
 import { useState } from "react";
 
 export default function ForgotPasswordForm() {
+  const posthog = usePostHog();
   const [sent, setSent] = useState(false);
 
   const form = useForm({
@@ -23,6 +25,7 @@ export default function ForgotPasswordForm() {
           email: value.email,
           redirectTo: "/reset-password",
         });
+        posthog.capture("password_reset_requested");
         setSent(true);
       } catch {
         toast.error("Something went wrong. Please try again.");

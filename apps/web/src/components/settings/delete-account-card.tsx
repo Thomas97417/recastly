@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -26,12 +27,15 @@ import {
 } from "../ui/alert-dialog";
 
 export default function DeleteAccountCard() {
+  const posthog = usePostHog();
   const navigate = useNavigate();
 
   const handleDelete = async () => {
     await authClient.deleteUser({
       fetchOptions: {
         onSuccess: () => {
+          posthog.capture("account_deleted");
+          posthog.reset();
           navigate({ to: "/" });
           location.reload();
         },

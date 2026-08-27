@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
@@ -12,6 +13,7 @@ import { Label } from "./ui/label";
 import PasswordInput from "./ui/password-input";
 
 export default function SignInForm() {
+  const posthog = usePostHog();
   const navigate = useNavigate({
     from: "/",
   });
@@ -29,6 +31,7 @@ export default function SignInForm() {
         },
         {
           onSuccess: () => {
+            posthog.capture("user_signed_in");
             navigate({
               to: "/dashboard",
             });

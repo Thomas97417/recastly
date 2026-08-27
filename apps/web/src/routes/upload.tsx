@@ -3,6 +3,7 @@ import { api } from "@my-better-t-app/backend/convex/_generated/api";
 import { useMutation, usePaginatedQuery } from "convex/react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import {
   Card,
   CardContent,
@@ -35,6 +36,7 @@ export const Route = createFileRoute("/upload")({
 });
 
 function UploadPage() {
+  const posthog = usePostHog();
   const generateUploadUrl = useMutation(api.r2.generateUserUploadUrl);
   const syncMetadata = useMutation(api.r2.syncMetadata);
   const imageInput = useRef<HTMLInputElement>(null);
@@ -97,6 +99,7 @@ function UploadPage() {
         body: selectedImage,
       });
       await syncMetadata({ key });
+      posthog.capture("image_uploaded", { file_type: selectedImage.type });
       toast.success("Image uploaded successfully.");
       clearSelection();
     } catch {

@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { api } from "@my-better-t-app/backend/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import { Loader2, Camera, User } from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
@@ -20,6 +21,7 @@ export default function ProfileImageCard({
 }: {
   image: string | undefined;
 }) {
+  const posthog = usePostHog();
   const generateAvatarUploadUrl = useMutation(api.r2.generateAvatarUploadUrl);
   const syncMetadata = useMutation(api.r2.syncMetadata);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -61,6 +63,7 @@ export default function ProfileImageCard({
           { image: key },
           {
             onSuccess: () => {
+              posthog.capture("profile_image_updated", { file_type: file.type });
               toast.success("Profile image updated.");
             },
             onError: (error) => {
@@ -79,7 +82,7 @@ export default function ProfileImageCard({
         }
       }
     },
-    [generateAvatarUploadUrl, syncMetadata],
+    [generateAvatarUploadUrl, posthog, syncMetadata],
   );
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {

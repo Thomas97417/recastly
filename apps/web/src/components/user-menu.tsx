@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { usePostHog } from "posthog-js/react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { LogOut, Settings, Upload, User } from "lucide-react";
 
@@ -18,6 +19,7 @@ import { Button } from "./ui/button";
 export default function UserMenu() {
   const user = useCurrentUser();
   const navigate = useNavigate();
+  const posthog = usePostHog();
 
   return (
     <DropdownMenu>
@@ -63,6 +65,7 @@ export default function UserMenu() {
             authClient.signOut({
               fetchOptions: {
                 onSuccess: () => {
+                  posthog.reset();
                   navigate({ to: "/" });
                   location.reload();
                 },

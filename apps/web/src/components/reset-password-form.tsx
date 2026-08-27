@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { usePostHog } from "posthog-js/react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
@@ -54,6 +55,7 @@ function PasswordInput({
 
 export default function ResetPasswordForm() {
   const navigate = useNavigate();
+  const posthog = usePostHog();
   const search = useSearch({ strict: false }) as { token?: string };
   const token = search?.token;
 
@@ -70,6 +72,7 @@ export default function ResetPasswordForm() {
       if (error) {
         toast.error(error.message || "Failed to reset password.");
       } else {
+        posthog.capture("password_reset_completed");
         toast.success("Password reset successfully.");
         navigate({ to: "/sign-in" });
       }
