@@ -9,12 +9,21 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as authHelpers from "../authHelpers.js";
+import type * as crons from "../crons.js";
+import type * as domain from "../domain.js";
 import type * as env from "../env.js";
+import type * as eventsub from "../eventsub.js";
 import type * as healthCheck from "../healthCheck.js";
 import type * as http from "../http.js";
 import type * as privateData from "../privateData.js";
 import type * as r2 from "../r2.js";
+import type * as recordings from "../recordings.js";
 import type * as sendEmails from "../sendEmails.js";
+import type * as streamers from "../streamers.js";
+import type * as twitch from "../twitch.js";
+import type * as webhooks from "../webhooks.js";
+import type * as workerApi from "../workerApi.js";
 
 import type {
   ApiFromModules,
@@ -24,12 +33,21 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  authHelpers: typeof authHelpers;
+  crons: typeof crons;
+  domain: typeof domain;
   env: typeof env;
+  eventsub: typeof eventsub;
   healthCheck: typeof healthCheck;
   http: typeof http;
   privateData: typeof privateData;
   r2: typeof r2;
+  recordings: typeof recordings;
   sendEmails: typeof sendEmails;
+  streamers: typeof streamers;
+  twitch: typeof twitch;
+  webhooks: typeof webhooks;
+  workerApi: typeof workerApi;
 }>;
 
 /**

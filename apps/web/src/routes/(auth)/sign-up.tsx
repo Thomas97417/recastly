@@ -4,10 +4,10 @@ import SignUpForm from "@/components/sign-up-form";
 export const Route = createFileRoute("/(auth)/sign-up")({
   head: () => ({
     meta: [
-      { title: "Sign Up — Toma Stack" },
+      { title: "Créer un compte — Recastly" },
       {
         name: "description",
-        content: "Create a new Toma Stack account.",
+        content: "Créez votre espace Recastly.",
       },
     ],
   }),

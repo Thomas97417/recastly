@@ -6,7 +6,10 @@
   "author": "",
   "scripts": {
     "dev": "convex dev",
-    "dev:setup": "convex dev --configure --until-success"
+    "dev:setup": "convex dev --configure --until-success",
+    "check-types": "tsc --noEmit -p convex/tsconfig.json",
+    "build": "tsc --noEmit -p convex/tsconfig.json",
+    "test": "bun test convex"
   },
   "dependencies": {
     "@convex-dev/better-auth": "catalog:",
@@ -26,6 +29,7 @@
   "devDependencies": {
     "@my-better-t-app/config": "workspace:*",
     "@types/node": "^24.3.0",
+    "@types/bun": "^1.2.22",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "typescript": "catalog:"

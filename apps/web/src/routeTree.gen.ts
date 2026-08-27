@@ -9,10 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UploadRouteImport } from './routes/upload'
+import { Route as StreamersRouteImport } from './routes/streamers'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LibraryRouteImport } from './routes/library'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RecordingsRecordingIdRouteImport } from './routes/recordings.$recordingId'
 import { Route as authVerifyEmailRouteImport } from './routes/(auth)/verify-email'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
@@ -20,14 +22,19 @@ import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-pas
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const UploadRoute = UploadRouteImport.update({
-  id: '/upload',
-  path: '/upload',
+const StreamersRoute = StreamersRouteImport.update({
+  id: '/streamers',
+  path: '/streamers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -38,6 +45,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordingsRecordingIdRoute = RecordingsRecordingIdRouteImport.update({
+  id: '/recordings/$recordingId',
+  path: '/recordings/$recordingId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authVerifyEmailRoute = authVerifyEmailRouteImport.update({
@@ -74,38 +86,44 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/library': typeof LibraryRoute
   '/settings': typeof SettingsRoute
-  '/upload': typeof UploadRoute
+  '/streamers': typeof StreamersRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/verify-email': typeof authVerifyEmailRoute
+  '/recordings/$recordingId': typeof RecordingsRecordingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/library': typeof LibraryRoute
   '/settings': typeof SettingsRoute
-  '/upload': typeof UploadRoute
+  '/streamers': typeof StreamersRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/verify-email': typeof authVerifyEmailRoute
+  '/recordings/$recordingId': typeof RecordingsRecordingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/library': typeof LibraryRoute
   '/settings': typeof SettingsRoute
-  '/upload': typeof UploadRoute
+  '/streamers': typeof StreamersRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/(auth)/verify-email': typeof authVerifyEmailRoute
+  '/recordings/$recordingId': typeof RecordingsRecordingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -113,60 +131,68 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/library'
     | '/settings'
-    | '/upload'
+    | '/streamers'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
     | '/verify-email'
+    | '/recordings/$recordingId'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
+    | '/library'
     | '/settings'
-    | '/upload'
+    | '/streamers'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
     | '/verify-email'
+    | '/recordings/$recordingId'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/library'
     | '/settings'
-    | '/upload'
+    | '/streamers'
     | '/(auth)/forgot-password'
     | '/(auth)/reset-password'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/(auth)/verify-email'
+    | '/recordings/$recordingId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  LibraryRoute: typeof LibraryRoute
   SettingsRoute: typeof SettingsRoute
-  UploadRoute: typeof UploadRoute
+  StreamersRoute: typeof StreamersRoute
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authResetPasswordRoute: typeof authResetPasswordRoute
   authSignInRoute: typeof authSignInRoute
   authSignUpRoute: typeof authSignUpRoute
   authVerifyEmailRoute: typeof authVerifyEmailRoute
+  RecordingsRecordingIdRoute: typeof RecordingsRecordingIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/upload': {
-      id: '/upload'
-      path: '/upload'
-      fullPath: '/upload'
-      preLoaderRoute: typeof UploadRouteImport
+    '/streamers': {
+      id: '/streamers'
+      path: '/streamers'
+      fullPath: '/streamers'
+      preLoaderRoute: typeof StreamersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -174,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -188,6 +221,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recordings/$recordingId': {
+      id: '/recordings/$recordingId'
+      path: '/recordings/$recordingId'
+      fullPath: '/recordings/$recordingId'
+      preLoaderRoute: typeof RecordingsRecordingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/verify-email': {
@@ -238,13 +278,15 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  LibraryRoute: LibraryRoute,
   SettingsRoute: SettingsRoute,
-  UploadRoute: UploadRoute,
+  StreamersRoute: StreamersRoute,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authResetPasswordRoute: authResetPasswordRoute,
   authSignInRoute: authSignInRoute,
   authSignUpRoute: authSignUpRoute,
   authVerifyEmailRoute: authVerifyEmailRoute,
+  RecordingsRecordingIdRoute: RecordingsRecordingIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

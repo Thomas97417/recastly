@@ -4,10 +4,10 @@ import ResetPasswordForm from "@/components/reset-password-form";
 export const Route = createFileRoute("/(auth)/reset-password")({
   head: () => ({
     meta: [
-      { title: "Reset Password — Toma Stack" },
+      { title: "Nouveau mot de passe — Recastly" },
       {
         name: "description",
-        content: "Set a new password for your Toma Stack account.",
+        content: "Définissez un nouveau mot de passe Recastly.",
       },
     ],
   }),

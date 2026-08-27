@@ -4,7 +4,7 @@ import VerifyEmailForm from "@/components/verify-email-form";
 export const Route = createFileRoute("/(auth)/verify-email")({
   head: () => ({
     meta: [
-      { title: "Verify Email — Toma Stack" },
+      { title: "Vérifier l’email — Recastly" },
       {
         name: "description",
         content: "Resend your email verification link.",

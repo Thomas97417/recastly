@@ -56,6 +56,18 @@ function createAuth(ctx: GenericCtx<DataModel>) {
         enabled: true,
       },
     },
+    databaseHooks: {
+      user: {
+        delete: {
+          after: async (user) => {
+            const actionCtx = ctx as unknown as ActionCtx;
+            await actionCtx.runMutation(internal.recordings.cleanupUserAccess, {
+              userId: user.id,
+            });
+          },
+        },
+      },
+    },
     socialProviders: {
       github: {
         clientId: GITHUB_CLIENT_ID,

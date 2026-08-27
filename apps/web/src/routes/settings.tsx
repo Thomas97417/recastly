@@ -11,10 +11,10 @@ import UpdateNameCard from "@/components/settings/update-name-card";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Toma Stack" },
+      { title: "Réglages — Recastly" },
       {
         name: "description",
-        content: "Manage your account settings, email, password, and sessions.",
+        content: "Gérez votre compte Recastly, votre email et vos sessions.",
       },
     ],
   }),
@@ -34,9 +34,9 @@ function RouteComponent() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
       <div>
-        <h1 className="text-2xl font-bold">Settings</h1>
+        <h1 className="text-2xl font-bold">Réglages</h1>
         <p className="text-sm text-muted-foreground">
-          Manage your account settings.
+          Gérez votre profil, votre sécurité et vos sessions.
         </p>
       </div>
       <ProfileImageCard image={user.image ?? undefined} />

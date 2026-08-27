@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { usePostHog } from "posthog-js/react";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { LogOut, Settings, Upload, User } from "lucide-react";
+import { Library, LogOut, Settings, User } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -47,15 +47,15 @@ export default function UserMenu() {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
             <User className="mr-2 size-4" />
-            Dashboard
+            Vue d’ensemble
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate({ to: "/upload" })}>
-            <Upload className="mr-2 size-4" />
-            Upload
+          <DropdownMenuItem onClick={() => navigate({ to: "/library" })}>
+            <Library className="mr-2 size-4" />
+            Bibliothèque
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate({ to: "/settings" })}>
             <Settings className="mr-2 size-4" />
-            Settings
+            Réglages
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -74,7 +74,7 @@ export default function UserMenu() {
           }}
         >
           <LogOut className="mr-2 size-4" />
-          Sign Out
+          Se déconnecter
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

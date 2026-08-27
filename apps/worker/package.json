@@ -1,0 +1,17 @@
+{
+  "name": "@recastly/worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "check-types": "tsc --noEmit",
+    "build": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@my-better-t-app/config": "workspace:*",
+    "@types/bun": "^1.2.22",
+    "typescript": "catalog:"
+  }
+}

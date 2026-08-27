@@ -1,0 +1,16 @@
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - path: apps/worker/.env.example
+        required: true
+      - path: apps/worker/.env
+        required: false
+    volumes:
+      - recastly-recordings:/data
+
+volumes:
+  recastly-recordings:

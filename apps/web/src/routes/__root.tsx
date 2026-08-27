@@ -56,7 +56,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Toma Stack",
+        title: "Recastly",
       },
     ],
     links: [
@@ -120,7 +120,7 @@ function AppShell({
       initialToken={context.token}
     >
       {identifyUser && <PostHogUserIdentification />}
-      <html lang="en" suppressHydrationWarning>
+      <html lang="fr" suppressHydrationWarning>
         <head>
           <HeadContent />
         </head>

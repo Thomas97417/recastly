@@ -4,10 +4,10 @@ import ForgotPasswordForm from "@/components/forgot-password-form";
 export const Route = createFileRoute("/(auth)/forgot-password")({
   head: () => ({
     meta: [
-      { title: "Forgot Password — Toma Stack" },
+      { title: "Mot de passe oublié — Recastly" },
       {
         name: "description",
-        content: "Reset your Toma Stack account password.",
+        content: "Réinitialisez votre mot de passe Recastly.",
       },
     ],
   }),
