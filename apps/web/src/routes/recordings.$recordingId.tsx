@@ -41,15 +41,15 @@ function RecordingDetailPage() {
   });
   if (!recording)
     return (
-      <main className="mx-auto max-w-6xl space-y-5 p-5 lg:p-8">
+      <div className="mx-auto max-w-6xl space-y-5 p-5 lg:p-8">
         <Skeleton className="h-8 w-40" />
         <Skeleton className="h-40" />
         <Skeleton className="h-96" />
-      </main>
+      </div>
     );
 
   return (
-    <main className="mx-auto max-w-6xl space-y-6 p-5 lg:p-8">
+    <div className="mx-auto max-w-6xl space-y-6 p-5 lg:p-8">
       <Link
         to="/library"
         className={buttonVariants({
@@ -203,7 +203,7 @@ function RecordingDetailPage() {
           )}
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }
 

@@ -34,7 +34,7 @@ function LibraryPage() {
   }), [recordings, search]);
 
   return (
-    <main className="mx-auto max-w-6xl space-y-8 p-5 lg:p-8">
+    <div className="mx-auto max-w-6xl space-y-8 p-5 lg:p-8">
       <section><p className="text-sm text-muted-foreground">Vos archives</p><h1 className="mt-1 text-3xl font-semibold tracking-tight">Bibliothèque</h1><p className="mt-2 text-sm text-muted-foreground">Les parties prêtes sont lues depuis la chaîne YouTube du projet.</p></section>
       <section className="grid gap-3 rounded-2xl border bg-card p-4 md:grid-cols-[1fr_180px_180px]">
         <label className="relative"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Rechercher un titre…" className="pl-9" /></label>
@@ -51,6 +51,6 @@ function LibraryPage() {
           <ChevronRight className="hidden size-5 text-muted-foreground transition-transform group-hover:translate-x-1 sm:block" />
         </Link>
       ))}</section>}
-    </main>
+    </div>
   );
 }

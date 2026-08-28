@@ -8,6 +8,7 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  useLocation,
   useRouteContext,
   useRouter,
 } from "@tanstack/react-router";
@@ -15,6 +16,13 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Toaster } from "@/components/ui/sonner";
+import { AppHeader } from "@/components/app-header";
+import { AppSidebar } from "@/components/app-sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { authClient } from "@/lib/auth-client";
 import { getToken } from "@/lib/auth-server";
@@ -113,6 +121,19 @@ function AppShell({
   context: ReturnType<typeof useRouteContext>;
   identifyUser: boolean;
 }) {
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const hasAppSidebar =
+    context.isAuthenticated &&
+    [
+      "/dashboard",
+      "/streamers",
+      "/library",
+      "/recordings",
+      "/settings",
+    ].some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    );
+
   return (
     <ConvexBetterAuthProvider
       client={context.convexQueryClient.convexClient}
@@ -131,12 +152,26 @@ function AppShell({
             disableTransitionOnChange
             storageKey="vite-ui-theme"
           >
-            <div className="grid h-svh grid-rows-[auto_1fr]">
-              <Header />
-              <div className="overflow-y-auto">
-                <Outlet />
-              </div>
-            </div>
+            <TooltipProvider>
+              {hasAppSidebar ? (
+                <SidebarProvider>
+                  <AppSidebar />
+                  <SidebarInset className="h-svh min-w-0 overflow-hidden">
+                    <AppHeader />
+                    <div className="min-h-0 flex-1 overflow-y-auto">
+                      <Outlet />
+                    </div>
+                  </SidebarInset>
+                </SidebarProvider>
+              ) : (
+                <div className="grid h-svh grid-rows-[auto_1fr]">
+                  <Header />
+                  <div className="overflow-y-auto">
+                    <Outlet />
+                  </div>
+                </div>
+              )}
+            </TooltipProvider>
             <Toaster richColors />
             <TanStackRouterDevtools position="bottom-left" />
             <Scripts />

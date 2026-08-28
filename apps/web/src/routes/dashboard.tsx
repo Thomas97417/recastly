@@ -33,7 +33,7 @@ function DashboardPage() {
   ];
 
   return (
-    <main className="mx-auto max-w-7xl space-y-8 p-5 lg:p-8">
+    <div className="mx-auto max-w-7xl space-y-8 p-5 lg:p-8">
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <p className="text-sm text-muted-foreground">Bonjour {user?.name?.split(" ")[0] ?? ""}</p>
@@ -91,6 +91,6 @@ function DashboardPage() {
           </Card>
         </div>
       )}
-    </main>
+    </div>
   );
 }

@@ -50,7 +50,7 @@ function StreamersPage() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl space-y-8 p-5 lg:p-8">
+    <div className="mx-auto max-w-5xl space-y-8 p-5 lg:p-8">
       <section>
         <p className="text-sm text-muted-foreground">Surveillance Twitch</p>
         <h1 className="mt-1 text-3xl font-semibold tracking-tight">Vos streamers</h1>
@@ -84,6 +84,6 @@ function StreamersPage() {
           ))}
         </section>
       )}
-    </main>
+    </div>
   );
 }
