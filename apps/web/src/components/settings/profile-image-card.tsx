@@ -39,11 +39,11 @@ export default function ProfileImageCard({
   const processFile = useCallback(
     async (file: File) => {
       if (!file.type.startsWith("image/")) {
-        toast.error("Please select an image file.");
+        toast.error("Sélectionnez un fichier image.");
         return;
       }
       if (file.size > MAX_FILE_SIZE) {
-        toast.error("Image must be smaller than 5 MB.");
+        toast.error("L’image doit peser moins de 5 Mo.");
         return;
       }
 
@@ -64,7 +64,7 @@ export default function ProfileImageCard({
           {
             onSuccess: () => {
               posthog.capture("profile_image_updated", { file_type: file.type });
-              toast.success("Profile image updated.");
+              toast.success("Photo de profil mise à jour.");
             },
             onError: (error) => {
               toast.error(error.error.message);
@@ -73,7 +73,7 @@ export default function ProfileImageCard({
           },
         );
       } catch {
-        toast.error("Failed to upload image.");
+        toast.error("Impossible d’envoyer l’image.");
         setPreview(null);
       } finally {
         setIsUploading(false);
@@ -111,8 +111,8 @@ export default function ProfileImageCard({
     <SettingsCard>
       <SettingsCardContent>
         <SettingsCardHeader
-          title="Profile Image"
-          description="Click on the avatar to upload a new image."
+          title="Photo de profil"
+          description="Cliquez sur l’avatar ou déposez une nouvelle image."
         />
         <div className="flex items-center gap-5">
           <button
@@ -134,7 +134,7 @@ export default function ProfileImageCard({
               {imageUrl ? (
                 <img
                   src={imageUrl}
-                  alt="Profile"
+                  alt="Photo de profil"
                   className="size-full object-cover"
                 />
               ) : (
@@ -160,7 +160,7 @@ export default function ProfileImageCard({
           />
           <div className="flex flex-col gap-1">
             <p className="text-sm text-muted-foreground">
-              Click or drag & drop to change your avatar.
+              Cliquez ou glissez-déposez une image pour modifier votre avatar.
             </p>
             <p className="text-xs text-muted-foreground/70">
               JPG, PNG, GIF or WebP. 4 MB max.
@@ -170,7 +170,7 @@ export default function ProfileImageCard({
       </SettingsCardContent>
       <SettingsCardFooter>
         <p className="text-sm text-muted-foreground">
-          Your avatar is visible to other users.
+          Votre avatar est visible dans votre espace personnel.
         </p>
       </SettingsCardFooter>
     </SettingsCard>

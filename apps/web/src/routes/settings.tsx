@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { PageContainer, PageHeader } from "@/components/page-shell";
 
 import ChangePasswordCard from "@/components/settings/change-password-card";
 import DeleteAccountCard from "@/components/settings/delete-account-card";
@@ -32,19 +33,20 @@ function RouteComponent() {
   if (!user) return null;
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
-      <div>
-        <h1 className="text-2xl font-bold">Réglages</h1>
-        <p className="text-sm text-muted-foreground">
-          Gérez votre profil, votre sécurité et vos sessions.
-        </p>
+    <PageContainer className="max-w-4xl">
+      <PageHeader
+        eyebrow="Compte et sécurité"
+        title="Réglages"
+        description="Gérez votre profil, vos identifiants et les appareils connectés à votre espace Recastly."
+      />
+      <div className="flex flex-col gap-5">
+        <ProfileImageCard image={user.image ?? undefined} />
+        <UpdateNameCard name={user.name} />
+        <EmailCard email={user.email} />
+        <ChangePasswordCard />
+        <SessionsCard />
+        <DeleteAccountCard />
       </div>
-      <ProfileImageCard image={user.image ?? undefined} />
-      <UpdateNameCard name={user.name} />
-      <EmailCard email={user.email} />
-      <ChangePasswordCard />
-      <SessionsCard />
-      <DeleteAccountCard />
-    </div>
+    </PageContainer>
   );
 }

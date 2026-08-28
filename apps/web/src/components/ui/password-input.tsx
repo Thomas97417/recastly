@@ -38,7 +38,7 @@ export default function PasswordInput({
       <button
         type="button"
         tabIndex={-1}
-        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer transition-colors"
+        className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         onClick={() => setVisible((v) => !v)}
       >
         {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}

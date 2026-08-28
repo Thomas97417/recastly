@@ -53,8 +53,8 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   }
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border">
+    <Sidebar variant="inset" collapsible="icon" {...props}>
+      <SidebarHeader className="px-3 pt-3">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -63,13 +63,18 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
               render={
                 <Link to="/dashboard" onClick={closeMobileSidebar} />
               }
-              className="h-10"
+              className="h-12 px-2"
             >
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground shadow-md shadow-primary/20">
                 <Radio className="size-4" />
               </span>
-              <span className="truncate text-sm font-semibold tracking-tight">
-                Recastly
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold tracking-tight">
+                  Recastly
+                </span>
+                <span className="block truncate text-[0.65rem] font-normal text-sidebar-foreground/50">
+                  Archives Twitch
+                </span>
               </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -77,7 +82,7 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="px-3 pt-4">
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -105,6 +110,18 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
+        <div className="mx-1 mb-2 rounded-2xl border border-sidebar-border/70 bg-background/45 p-3 group-data-[collapsible=icon]:hidden">
+          <div className="flex items-center gap-2 text-xs font-medium">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-50" />
+              <span className="relative inline-flex size-2 rounded-full bg-primary" />
+            </span>
+            Surveillance active
+          </div>
+          <p className="mt-1.5 text-[0.68rem] leading-5 text-sidebar-foreground/55">
+            Les directs de vos chaînes sont détectés automatiquement.
+          </p>
+        </div>
         <SidebarSeparator className="mx-0" />
         <SidebarMenu>
           <SidebarMenuItem>

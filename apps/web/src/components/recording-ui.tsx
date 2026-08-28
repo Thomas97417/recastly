@@ -5,7 +5,7 @@ const stateMeta: Record<string, { label: string; className: string; icon: typeof
   recording: { label: "Capture", className: "bg-red-500/10 text-red-700 dark:text-red-300", icon: Radio },
   uploading: { label: "Envoi", className: "bg-blue-500/10 text-blue-700 dark:text-blue-300", icon: UploadCloud },
   processing: { label: "Traitement", className: "bg-violet-500/10 text-violet-700 dark:text-violet-300", icon: CircleDashed },
-  ready: { label: "Prête", className: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300", icon: CheckCircle2 },
+  ready: { label: "Prête", className: "bg-primary/10 text-primary", icon: CheckCircle2 },
   missed: { label: "Manquée", className: "bg-muted text-muted-foreground", icon: Clock3 },
   failed: { label: "Échec", className: "bg-destructive/10 text-destructive", icon: AlertTriangle },
 };

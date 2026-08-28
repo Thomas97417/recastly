@@ -1,8 +1,18 @@
+import { api } from "@my-better-t-app/backend/convex/_generated/api";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { api } from "@my-better-t-app/backend/convex/_generated/api";
-import { AlertTriangle, ArrowRight, Clock3, Library, Radio, UploadCloud, Users } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Clock3,
+  Library,
+  Radio,
+  Sparkles,
+  UploadCloud,
+  Users,
+} from "lucide-react";
 
+import { EmptyState, PageContainer, PageHeader } from "@/components/page-shell";
 import { StateBadge, formatDate } from "@/components/recording-ui";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +20,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({ meta: [{ title: "Vue d’ensemble — Recastly" }, { name: "description", content: "État de vos captures Twitch." }] }),
+  head: () => ({
+    meta: [
+      { title: "Vue d’ensemble — Recastly" },
+      { name: "description", content: "État de vos captures Twitch." },
+    ],
+  }),
   beforeLoad: async ({ context }) => {
     if (!context.isAuthenticated) throw redirect({ to: "/sign-in" });
   },
@@ -22,75 +37,186 @@ function DashboardPage() {
   const data = useQuery(api.recordings.dashboard);
 
   if (!data) {
-    return <div className="mx-auto max-w-7xl space-y-6 p-5 lg:p-8"><Skeleton className="h-20 w-full" /><Skeleton className="h-36 w-full" /><Skeleton className="h-72 w-full" /></div>;
+    return (
+      <PageContainer>
+        <Skeleton className="h-28 w-full" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[0, 1, 2, 3].map((item) => (
+            <Skeleton key={item} className="h-32" />
+          ))}
+        </div>
+        <Skeleton className="h-80 w-full" />
+      </PageContainer>
+    );
   }
 
   const stats = [
-    { label: "En direct", value: data.liveStreamers.length, icon: Radio, color: "text-red-500" },
-    { label: "Captures actives", value: data.active.length, icon: Radio, color: "text-primary" },
-    { label: "En attente", value: data.queued.length, icon: Clock3, color: "text-amber-500" },
-    { label: "En traitement", value: data.processing.length, icon: UploadCloud, color: "text-blue-500" },
+    {
+      label: "En direct",
+      value: data.liveStreamers.length,
+      icon: Radio,
+      style: "bg-red-500/10 text-red-600 dark:text-red-300",
+    },
+    {
+      label: "Captures actives",
+      value: data.active.length,
+      icon: Sparkles,
+      style: "bg-primary/10 text-primary",
+    },
+    {
+      label: "En attente",
+      value: data.queued.length,
+      icon: Clock3,
+      style: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
+    },
+    {
+      label: "En traitement",
+      value: data.processing.length,
+      icon: UploadCloud,
+      style: "bg-blue-500/10 text-blue-700 dark:text-blue-300",
+    },
   ];
+  const currentActivity = [...data.active, ...data.queued, ...data.processing];
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 p-5 lg:p-8">
-      <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <p className="text-sm text-muted-foreground">Bonjour {user?.name?.split(" ")[0] ?? ""}</p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight">Tout est sous contrôle.</h1>
-        </div>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className={`rounded-full px-3 py-1.5 ${data.config.captureEnabled ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-destructive/10 text-destructive"}`}>
-            Capture {data.config.captureEnabled ? "activée" : "désactivée"}
-          </span>
-          <span className="rounded-full border px-3 py-1.5">YouTube · {data.config.youtubePrivacy}</span>
-        </div>
-      </section>
+    <PageContainer>
+      <PageHeader
+        eyebrow={`Bonjour ${user?.name?.split(" ")[0] ?? ""}`}
+        title="Tout est sous contrôle."
+        description="Suivez l’activité de vos captures, les traitements en cours et la santé de votre bibliothèque."
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold ${
+                data.config.captureEnabled
+                  ? "bg-primary/10 text-primary"
+                  : "bg-destructive/10 text-destructive"
+              }`}
+            >
+              <span className="size-1.5 rounded-full bg-current" />
+              Capture {data.config.captureEnabled ? "activée" : "désactivée"}
+            </span>
+            <span className="rounded-full border border-border/70 bg-card px-3.5 py-2 text-xs font-medium text-muted-foreground shadow-xs">
+              YouTube · {data.config.youtubePrivacy}
+            </span>
+          </div>
+        }
+      />
 
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map(({ label, value, icon: Icon, color }) => (
-          <Card key={label} className="gap-3 py-5">
-            <CardContent className="flex items-center justify-between px-5">
-              <div><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 text-3xl font-semibold tabular-nums">{value}</p></div>
-              <div className="flex size-10 items-center justify-center rounded-xl bg-muted"><Icon className={`size-5 ${color}`} /></div>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map(({ label, value, icon: Icon, style }) => (
+          <Card key={label} className="relative overflow-hidden py-5">
+            <CardContent className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">{label}</p>
+                <p className="mt-2 text-4xl font-semibold tracking-[-0.04em] tabular-nums">
+                  {value}
+                </p>
+              </div>
+              <div className={`flex size-12 items-center justify-center rounded-2xl ${style}`}>
+                <Icon className="size-5" />
+              </div>
             </CardContent>
           </Card>
         ))}
       </section>
 
       {data.followedCount === 0 ? (
-        <section className="rounded-2xl border border-dashed p-10 text-center">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Users className="size-6" /></div>
-          <h2 className="mt-4 text-lg font-medium">Ajoutez votre premier streamer</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">Dès son prochain passage en direct, Recastly créera une archive et vous la retrouverez ici.</p>
-          <Link to="/streamers" className={buttonVariants({ className: "mt-5" })}>Choisir une chaîne <ArrowRight className="size-4" /></Link>
-        </section>
+        <EmptyState
+          icon={<Users className="size-6" />}
+          title="Ajoutez votre premier streamer"
+          description="Dès son prochain passage en direct, Recastly créera une archive et la rangera automatiquement dans votre bibliothèque."
+          action={
+            <Link to="/streamers" className={buttonVariants()}>
+              Choisir une chaîne <ArrowRight />
+            </Link>
+          }
+        />
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
+        <div className="grid gap-5 lg:grid-cols-[1.45fr_0.75fr]">
           <Card>
-            <CardHeader className="flex-row items-center justify-between"><CardTitle>Activité en cours</CardTitle><Link to="/library" className={buttonVariants({ variant: "ghost", size: "sm" })}>Bibliothèque <ArrowRight className="size-3.5" /></Link></CardHeader>
-            <CardContent className="space-y-2">
-              {[...data.active, ...data.queued, ...data.processing].length === 0 ? (
-                <div className="py-10 text-center text-sm text-muted-foreground"><Library className="mx-auto mb-3 size-6 opacity-50" />Aucune capture en cours pour le moment.</div>
-              ) : [...data.active, ...data.queued, ...data.processing].map((recording) => (
-                <Link key={recording._id} to="/recordings/$recordingId" params={{ recordingId: recording._id }} className="flex items-center justify-between gap-4 rounded-xl border p-4 transition-colors hover:bg-muted/50">
-                  <div className="min-w-0"><p className="truncate text-sm font-medium">{recording.streamer?.displayName}</p><p className="mt-1 truncate text-xs text-muted-foreground">{recording.title || formatDate(recording.twitchStartedAt)}</p></div>
-                  <StateBadge state={recording.state} />
-                </Link>
-              ))}
+            <CardHeader className="flex-row items-center justify-between">
+              <div>
+                <CardTitle>Activité en cours</CardTitle>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Captures et traitements qui demandent encore de l’attention.
+                </p>
+              </div>
+              <Link
+                to="/library"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                Tout voir <ArrowRight />
+              </Link>
+            </CardHeader>
+            <CardContent className="space-y-2.5">
+              {currentActivity.length === 0 ? (
+                <div className="rounded-2xl bg-muted/45 py-12 text-center text-sm text-muted-foreground">
+                  <Library className="mx-auto mb-3 size-6 opacity-50" />
+                  Aucune capture en cours pour le moment.
+                </div>
+              ) : (
+                currentActivity.map((recording) => (
+                  <Link
+                    key={recording._id}
+                    to="/recordings/$recordingId"
+                    params={{ recordingId: recording._id }}
+                    className="group flex items-center justify-between gap-4 rounded-2xl border border-border/65 bg-background/45 p-4 transition hover:border-primary/20 hover:bg-accent/35"
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                        <Radio className="size-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold">
+                          {recording.streamer?.displayName}
+                        </p>
+                        <p className="mt-1 truncate text-xs text-muted-foreground">
+                          {recording.title || formatDate(recording.twitchStartedAt)}
+                        </p>
+                      </div>
+                    </div>
+                    <StateBadge state={recording.state} />
+                  </Link>
+                ))
+              )}
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>Derniers incidents</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle>Derniers incidents</CardTitle>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Les erreurs récentes du pipeline.
+              </p>
+            </CardHeader>
             <CardContent>
-              {data.failures.length === 0 ? <p className="py-10 text-center text-sm text-muted-foreground">Aucun échec récent.</p> : (
-                <div className="space-y-3">{data.failures.map((recording) => <div key={recording._id} className="rounded-xl bg-destructive/5 p-3"><div className="flex items-center gap-2 text-sm font-medium text-destructive"><AlertTriangle className="size-4" />{recording.streamer?.displayName}</div><p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{recording.error}</p></div>)}</div>
+              {data.failures.length === 0 ? (
+                <div className="rounded-2xl bg-muted/45 px-4 py-12 text-center text-sm text-muted-foreground">
+                  Aucun échec récent.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {data.failures.map((recording) => (
+                    <div
+                      key={recording._id}
+                      className="rounded-2xl border border-destructive/15 bg-destructive/5 p-4"
+                    >
+                      <div className="flex items-center gap-2 text-sm font-semibold text-destructive">
+                        <AlertTriangle className="size-4" />
+                        {recording.streamer?.displayName}
+                      </div>
+                      <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                        {recording.error}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               )}
             </CardContent>
           </Card>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

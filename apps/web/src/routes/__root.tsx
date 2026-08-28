@@ -18,10 +18,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { Toaster } from "@/components/ui/sonner";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { authClient } from "@/lib/auth-client";
@@ -124,13 +121,7 @@ function AppShell({
   const pathname = useLocation({ select: (location) => location.pathname });
   const hasAppSidebar =
     context.isAuthenticated &&
-    [
-      "/dashboard",
-      "/streamers",
-      "/library",
-      "/recordings",
-      "/settings",
-    ].some(
+    ["/dashboard", "/streamers", "/library", "/recordings", "/settings"].some(
       (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
     );
 
@@ -156,7 +147,7 @@ function AppShell({
               {hasAppSidebar ? (
                 <SidebarProvider>
                   <AppSidebar />
-                  <SidebarInset className="h-svh min-w-0 overflow-hidden">
+                  <SidebarInset className="h-svh min-w-0 overflow-hidden md:h-[calc(100svh-1rem)]">
                     <AppHeader />
                     <div className="min-h-0 flex-1 overflow-y-auto">
                       <Outlet />
@@ -173,7 +164,7 @@ function AppShell({
               )}
             </TooltipProvider>
             <Toaster richColors />
-            <TanStackRouterDevtools position="bottom-left" />
+            <TanStackRouterDevtools position="bottom-right" />
             <Scripts />
           </ThemeProvider>
         </body>

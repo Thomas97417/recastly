@@ -1,24 +1,23 @@
 import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
-import { toast } from "sonner";
+import { KeyRound, MailCheck } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
+import { useState } from "react";
+import { toast } from "sonner";
 import z from "zod";
 
+import { AuthShell } from "@/components/auth-shell";
 import { authClient } from "@/lib/auth-client";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { useState } from "react";
 
 export default function ForgotPasswordForm() {
   const posthog = usePostHog();
   const [sent, setSent] = useState(false);
-
   const form = useForm({
-    defaultValues: {
-      email: "",
-    },
+    defaultValues: { email: "" },
     onSubmit: async ({ value }) => {
       try {
         await authClient.requestPasswordReset({
@@ -28,72 +27,63 @@ export default function ForgotPasswordForm() {
         posthog.capture("password_reset_requested");
         setSent(true);
       } catch {
-        toast.error("Something went wrong. Please try again.");
+        toast.error("Une erreur est survenue. Réessayez dans un instant.");
       }
     },
     validators: {
-      onSubmit: z.object({
-        email: z.email("Invalid email address"),
-      }),
+      onSubmit: z.object({ email: z.email("Adresse email invalide") }),
     },
   });
 
   if (sent) {
     return (
-      <div className="mx-auto w-full mt-10 max-w-md p-6 text-center space-y-3">
-        <h1 className="text-3xl font-bold">Check your inbox</h1>
-        <p className="text-sm text-muted-foreground">
-          If an account exists for that email, a reset link has been sent.
-        </p>
-        <Link
-          to="/sign-in"
-          className="inline-block text-sm text-muted-foreground hover:text-foreground hover:underline"
-        >
-          Back to sign in
+      <AuthShell
+        icon={<MailCheck className="size-5" />}
+        title="Consultez votre boîte mail"
+        description="Si un compte correspond à cette adresse, nous venons d’envoyer un lien de réinitialisation."
+      >
+        <Link to="/sign-in" className="block text-center text-sm font-medium text-primary hover:underline">
+          Revenir à la connexion
         </Link>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="mx-auto w-full mt-10 max-w-md p-6">
-      <h1 className="mb-2 text-center text-3xl font-bold">Forgot password?</h1>
-      <p className="mb-6 text-center text-sm text-muted-foreground">
-        Enter your email and we'll send you a reset link.
-      </p>
-
+    <AuthShell
+      icon={<KeyRound className="size-5" />}
+      title="Mot de passe oublié ?"
+      description="Saisissez votre adresse email pour recevoir un lien de réinitialisation."
+    >
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
           form.handleSubmit();
         }}
-        className="space-y-4"
+        className="space-y-5"
       >
-        <div>
-          <form.Field name="email">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor={field.name}>Email</Label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  type="email"
-                  placeholder="john.doe@example.com"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-                {field.state.meta.errors.map((error) => (
-                  <p key={error?.message} className="text-red-500 text-sm">
-                    {error?.message}
-                  </p>
-                ))}
-              </div>
-            )}
-          </form.Field>
-        </div>
-
+        <form.Field name="email">
+          {(field) => (
+            <div className="space-y-2">
+              <Label htmlFor={field.name}>Adresse email</Label>
+              <Input
+                id={field.name}
+                name={field.name}
+                type="email"
+                placeholder="vous@exemple.fr"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(event) => field.handleChange(event.target.value)}
+              />
+              {field.state.meta.errors.map((error) => (
+                <p key={error?.message} className="text-xs text-destructive">
+                  {error?.message}
+                </p>
+              ))}
+            </div>
+          )}
+        </form.Field>
         <form.Subscribe>
           {(state) => (
             <Button
@@ -101,20 +91,17 @@ export default function ForgotPasswordForm() {
               className="w-full"
               disabled={!state.canSubmit || state.isSubmitting}
             >
-              {state.isSubmitting ? "Sending..." : "Send reset link"}
+              {state.isSubmitting ? "Envoi…" : "Envoyer le lien"}
             </Button>
           )}
         </form.Subscribe>
       </form>
-
-      <div className="mt-4 text-center">
-        <Link
-          to="/sign-in"
-          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-        >
-          Back to sign in
-        </Link>
-      </div>
-    </div>
+      <Link
+        to="/sign-in"
+        className="mt-6 block text-center text-sm text-muted-foreground hover:text-foreground hover:underline"
+      >
+        Revenir à la connexion
+      </Link>
+    </AuthShell>
   );
 }

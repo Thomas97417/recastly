@@ -27,7 +27,7 @@ export default function UpdateNameCard({ name }: { name: string }) {
         {
           onSuccess: () => {
             posthog.capture("user_name_updated");
-            toast.success("Name updated successfully.");
+            toast.success("Nom mis à jour.");
           },
           onError: (error) => {
             toast.error(error.error.message);
@@ -37,7 +37,7 @@ export default function UpdateNameCard({ name }: { name: string }) {
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(2, "Name must be at least 2 characters."),
+        name: z.string().min(2, "Le nom doit contenir au moins 2 caractères."),
       }),
     },
   });
@@ -53,22 +53,22 @@ export default function UpdateNameCard({ name }: { name: string }) {
       <SettingsCard>
         <SettingsCardContent>
           <SettingsCardHeader
-            title="Your Name"
-            description="This is the name displayed on your profile."
+            title="Votre nom"
+            description="Le nom affiché dans votre espace Recastly."
           />
           <form.Field
             name="name"
             children={(field) => (
               <div className="flex flex-col gap-1">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Nom</Label>
                 <Input
-                  placeholder="Name"
+                  placeholder="Votre nom"
                   autoComplete="off"
                   required
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="w-80 bg-transparent"
+                  className="w-full max-w-sm"
                 />
                 {field.state.meta.errors.map((error) => (
                   <p key={error?.message} className="text-sm text-destructive">
@@ -81,7 +81,7 @@ export default function UpdateNameCard({ name }: { name: string }) {
         </SettingsCardContent>
         <SettingsCardFooter>
           <p className="text-sm text-muted-foreground">
-            Please use 32 characters at maximum.
+            Utilisez au maximum 32 caractères.
           </p>
           <form.Subscribe>
             {(state) => (
@@ -93,7 +93,7 @@ export default function UpdateNameCard({ name }: { name: string }) {
                 {state.isSubmitting ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Save"
+                  "Enregistrer"
                 )}
               </Button>
             )}

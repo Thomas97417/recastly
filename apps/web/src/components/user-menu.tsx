@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { usePostHog } from "posthog-js/react";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { Library, LogOut, Settings, User } from "lucide-react";
+import { ChevronDown, Library, LogOut, Settings, User } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -25,12 +25,16 @@ export default function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="outline" className="flex items-center gap-2 px-2" />
+          <Button variant="ghost" className="flex items-center gap-2 px-2.5" />
         }
       >
+        <span className="flex size-7 items-center justify-center rounded-lg bg-accent text-xs font-semibold text-accent-foreground">
+          {user?.name?.trim().charAt(0).toUpperCase() || "R"}
+        </span>
         <span className="hidden text-sm font-medium sm:inline-block">
           {user?.name}
         </span>
+        <ChevronDown className="size-3.5 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 bg-card">
         <DropdownMenuGroup>

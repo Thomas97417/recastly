@@ -65,7 +65,7 @@ export default function SessionsCard() {
             return;
           }
           posthog.capture("session_revoked", { is_current_session: false });
-          toast.success("Session revoked.");
+          toast.success("Session révoquée.");
           queryClient.invalidateQueries({ queryKey: ["sessions"] });
         },
         onError: (error) => {
@@ -83,7 +83,7 @@ export default function SessionsCard() {
       toast.error(error.message);
     } else {
       posthog.capture("other_sessions_revoked");
-      toast.success("All other sessions revoked.");
+      toast.success("Toutes les autres sessions ont été révoquées.");
       queryClient.invalidateQueries({ queryKey: ["sessions"] });
     }
     setRevokingAll(false);
@@ -99,14 +99,14 @@ export default function SessionsCard() {
   }
 
   function getBrowserName(userAgent: string | null | undefined) {
-    if (!userAgent) return "Unknown browser";
+    if (!userAgent) return "Navigateur inconnu";
     const ua = userAgent.toLowerCase();
     if (ua.includes("firefox")) return "Firefox";
     if (ua.includes("edg")) return "Edge";
     if (ua.includes("safari") && !ua.includes("chrome")) return "Safari";
     if (ua.includes("chrome")) return "Chrome";
     if (ua.includes("opera") || ua.includes("opr")) return "Opera";
-    return "Unknown browser";
+    return "Navigateur inconnu";
   }
 
   const otherSessions = sessions?.filter(
@@ -117,8 +117,8 @@ export default function SessionsCard() {
     <SettingsCard>
       <SettingsCardContent>
         <SettingsCardHeader
-          title="Active Sessions"
-          description="Manage your active sessions across devices."
+          title="Sessions actives"
+          description="Gérez les appareils actuellement connectés à votre compte."
         />
         <div className="flex flex-col gap-2">
           {isLoading ? (
@@ -132,7 +132,7 @@ export default function SessionsCard() {
               return (
                 <div
                   key={session.token}
-                  className="flex items-center justify-between rounded-md border p-3"
+                  className="flex items-center justify-between rounded-xl border border-border/70 bg-background/45 p-3.5"
                 >
                   <div className="flex items-center gap-3">
                     <div className="text-muted-foreground">
@@ -143,12 +143,12 @@ export default function SessionsCard() {
                         <span>{getBrowserName(session.userAgent)}</span>
                         {isCurrent && (
                           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[0.65rem] font-medium text-primary">
-                            Current
+                            Actuelle
                           </span>
                         )}
                       </div>
                       <span className="text-xs text-muted-foreground">
-                        Last active{" "}
+                        Dernière activité{" "}
                         {new Date(session.updatedAt).toLocaleDateString(
                           undefined,
                           {
@@ -185,22 +185,22 @@ export default function SessionsCard() {
                             <LogOut className="size-5" />
                           </AlertDialogMedia>
                           <AlertDialogTitle>
-                            Revoke current session?
+                            Révoquer la session actuelle ?
                           </AlertDialogTitle>
                           <AlertDialogDescription>
-                            You will be logged out immediately and redirected to
-                            the home page.
+                            Vous serez immédiatement déconnecté puis redirigé
+                            vers la page d’accueil.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>Annuler</AlertDialogCancel>
                           <AlertDialogAction
                             variant="destructive"
                             onClick={() =>
                               revokeSession(session.id, session.token)
                             }
                           >
-                            Log out
+                            Se déconnecter
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
@@ -224,13 +224,13 @@ export default function SessionsCard() {
               );
             })
           ) : (
-            <p className="text-sm text-muted-foreground">No active sessions.</p>
+            <p className="text-sm text-muted-foreground">Aucune session active.</p>
           )}
         </div>
       </SettingsCardContent>
       <SettingsCardFooter>
         <p className="text-sm text-muted-foreground">
-          Revoke access from devices you don't recognize.
+          Révoquez les appareils que vous ne reconnaissez pas.
         </p>
         <Button
           size="sm"
@@ -242,7 +242,7 @@ export default function SessionsCard() {
           {revokingAll ? (
             <Loader2 className="size-4 animate-spin" />
           ) : (
-            "Revoke all others"
+            "Révoquer les autres"
           )}
         </Button>
       </SettingsCardFooter>

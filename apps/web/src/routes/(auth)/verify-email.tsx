@@ -7,7 +7,7 @@ export const Route = createFileRoute("/(auth)/verify-email")({
       { title: "Vérifier l’email — Recastly" },
       {
         name: "description",
-        content: "Resend your email verification link.",
+        content: "Recevez un nouveau lien de vérification Recastly.",
       },
     ],
   }),

@@ -1,79 +1,34 @@
 import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { KeyRound } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
+import { toast } from "sonner";
 import z from "zod";
 
+import { AuthShell } from "@/components/auth-shell";
+import PasswordInput from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-
-function PasswordInput({
-  id,
-  placeholder,
-  autoComplete,
-  value,
-  onBlur,
-  onChange,
-}: {
-  id: string;
-  placeholder: string;
-  autoComplete: string;
-  value: string;
-  onBlur: () => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <div className="relative">
-      <Input
-        id={id}
-        type={visible ? "text" : "password"}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        value={value}
-        onBlur={onBlur}
-        onChange={onChange}
-        className="pr-9"
-      />
-      <button
-        type="button"
-        tabIndex={-1}
-        className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
-        onClick={() => setVisible((v) => !v)}
-      >
-        {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-      </button>
-    </div>
-  );
-}
 
 export default function ResetPasswordForm() {
   const navigate = useNavigate();
   const posthog = usePostHog();
   const search = useSearch({ strict: false }) as { token?: string };
   const token = search?.token;
-
   const form = useForm({
-    defaultValues: {
-      newPassword: "",
-      confirmPassword: "",
-    },
+    defaultValues: { newPassword: "", confirmPassword: "" },
     onSubmit: async ({ value }) => {
       const { error } = await authClient.resetPassword({
         newPassword: value.newPassword,
         token: token!,
       });
       if (error) {
-        toast.error(error.message || "Failed to reset password.");
+        toast.error(error.message || "Impossible de modifier le mot de passe.");
       } else {
         posthog.capture("password_reset_completed");
-        toast.success("Password reset successfully.");
+        toast.success("Mot de passe réinitialisé.");
         navigate({ to: "/sign-in" });
       }
     },
@@ -82,11 +37,11 @@ export default function ResetPasswordForm() {
         .object({
           newPassword: z
             .string()
-            .min(8, "Password must be at least 8 characters."),
+            .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
           confirmPassword: z.string(),
         })
         .refine((data) => data.newPassword === data.confirmPassword, {
-          message: "Passwords do not match.",
+          message: "Les mots de passe ne correspondent pas.",
           path: ["confirmPassword"],
         }),
     },
@@ -94,50 +49,48 @@ export default function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <div className="mx-auto mt-10 w-full max-w-md p-6 text-center space-y-3">
-        <h1 className="text-3xl font-bold">Invalid link</h1>
-        <p className="text-sm text-muted-foreground">
-          This password reset link is invalid or has expired.
-        </p>
-        <Link
-          to="/forgot-password"
-          className="inline-block text-sm text-muted-foreground hover:text-foreground hover:underline"
-        >
-          Request a new link
+      <AuthShell
+        icon={<KeyRound className="size-5" />}
+        title="Lien invalide"
+        description="Ce lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau pour continuer."
+      >
+        <Link to="/forgot-password" className="block">
+          <Button variant="outline" className="w-full">
+            Demander un nouveau lien
+          </Button>
         </Link>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="mx-auto mt-10 w-full max-w-md p-6">
-      <h1 className="mb-2 text-center text-3xl font-bold">Reset password</h1>
-      <p className="mb-6 text-center text-sm text-muted-foreground">
-        Enter your new password below.
-      </p>
-
+    <AuthShell
+      icon={<KeyRound className="size-5" />}
+      title="Nouveau mot de passe"
+      description="Choisissez un mot de passe unique d’au moins 8 caractères."
+    >
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
           form.handleSubmit();
         }}
-        className="space-y-4"
+        className="space-y-5"
       >
         <form.Field name="newPassword">
           {(field) => (
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New password</Label>
+              <Label htmlFor="newPassword">Nouveau mot de passe</Label>
               <PasswordInput
                 id="newPassword"
-                placeholder="New password"
+                placeholder="8 caractères minimum"
                 autoComplete="new-password"
                 value={field.state.value}
                 onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
+                onChange={(event) => field.handleChange(event.target.value)}
               />
               {field.state.meta.errors.map((error) => (
-                <p key={error?.message} className="text-sm text-destructive">
+                <p key={error?.message} className="text-xs text-destructive">
                   {error?.message}
                 </p>
               ))}
@@ -148,17 +101,17 @@ export default function ResetPasswordForm() {
         <form.Field name="confirmPassword">
           {(field) => (
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm new password</Label>
+              <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
               <PasswordInput
                 id="confirmPassword"
-                placeholder="Confirm new password"
+                placeholder="Confirmez le mot de passe"
                 autoComplete="new-password"
                 value={field.state.value}
                 onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
+                onChange={(event) => field.handleChange(event.target.value)}
               />
               {field.state.meta.errors.map((error) => (
-                <p key={error?.message} className="text-sm text-destructive">
+                <p key={error?.message} className="text-xs text-destructive">
                   {error?.message}
                 </p>
               ))}
@@ -173,20 +126,17 @@ export default function ResetPasswordForm() {
               className="w-full"
               disabled={!state.canSubmit || state.isSubmitting}
             >
-              {state.isSubmitting ? "Saving..." : "Reset password"}
+              {state.isSubmitting ? "Enregistrement…" : "Modifier le mot de passe"}
             </Button>
           )}
         </form.Subscribe>
       </form>
-
-      <div className="mt-4 text-center">
-        <Link
-          to="/sign-in"
-          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-        >
-          Back to sign in
-        </Link>
-      </div>
-    </div>
+      <Link
+        to="/sign-in"
+        className="mt-6 block text-center text-sm text-muted-foreground hover:text-foreground hover:underline"
+      >
+        Revenir à la connexion
+      </Link>
+    </AuthShell>
   );
 }
